@@ -390,7 +390,7 @@ C = [math.pow(base,i) for i in range(-6,6)]
 tuned_parameters = [{'C': C}, {'penalty':['l1','l2']}, {'class_weight':[None,'balanced']}]
 
 C = [round(math.log(i,base)) for i in C]
-clf = GridSearchCV(LogisticRegression(),                    tuned_parameters, cv=cv, scoring='recall', n_jobs=-1, verbose=10)
+clf = GridSearchCV(LogisticRegression(),                    tuned_parameters, cv=cv, scoring='recall', n_jobs=7, verbose=10)
 clf.fit(X_train_std, y_train)
 
 # plot_grid_search(clf, X_train, y_train, C)
@@ -430,7 +430,7 @@ C = [math.pow(base,i) for i in range(-6,6)]
 tuned_parameters = [{'alpha': C}, {'penalty':['l1','l2']}, {'class_weight':[None,'balanced']}]
 
 C = [round(math.log(i,base)) for i in C]
-clf = GridSearchCV(SGDClassifier(loss="hinge",max_iter=1000, n_jobs=-1),                    tuned_parameters, cv=cv, scoring='recall', n_jobs=-1)
+clf = GridSearchCV(SGDClassifier(loss="hinge",max_iter=1000, n_jobs=7),                    tuned_parameters, cv=cv, scoring='recall', n_jobs=7)
 clf.fit(X_train_std, y_train)
 
 # plot_grid_search(clf, X_train, y_train, C)
@@ -470,8 +470,8 @@ tuned_parameters = {"max_depth": [2, 3, 5, 8, 10, 15, 20, 25, 30, 40, 50],
                 "max_features": ['auto', 'sqrt'],
                 "class_weight": ['balanced', 'balanced_subsample', None]
              }
-rf = RandomForestClassifier(random_state=42, n_jobs=-1)
-clf = RandomizedSearchCV(rf, tuned_parameters, cv=cv, scoring='recall', n_jobs=-1, verbose=10)
+rf = RandomForestClassifier(random_state=42, n_jobs=7)
+clf = RandomizedSearchCV(rf, tuned_parameters, cv=cv, scoring='recall', n_jobs=7, verbose=10)
 clf.fit(X_train, y_train)
 
 print(clf.best_estimator_)
@@ -516,7 +516,7 @@ tuned_parameters = {"n_estimators": [10, 20, 30, 40, 50],
 
 
 xgbc = xgb.XGBClassifier(n_jobs = -1, random_state=42)
-clf = RandomizedSearchCV(xgbc, tuned_parameters, cv=cv, scoring='recall', n_jobs = -1, verbose=10)
+clf = RandomizedSearchCV(xgbc, tuned_parameters, cv=cv, scoring='recall', n_jobs = 7, verbose=10)
 clf.fit(X_train, y_train)
 
 print(clf.best_estimator_)
