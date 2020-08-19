@@ -19,6 +19,8 @@ from prettytable import PrettyTable
 from sklearn.calibration import CalibratedClassifierCV
 from tqdm import tqdm
 
+aantal_processoren = 7
+
 # Onze poor mans tijdsregistratie
 def geeftVoortgangsInformatie(meldingsText, startTijd, tijdVorigePunt):
     nu = datetime.now()
@@ -156,15 +158,16 @@ C = [math.pow(base,i) for i in range(-6,6)]
 tuned_parameters = [{'C': C}, {'penalty':['l1','l2']}, {'class_weight':[None, 'balanced']}]
 
 C = [round(math.log(i, base)) for i in C]
-clf = GridSearchCV(LogisticRegression(), tuned_parameters, cv=cv, scoring='recall', n_jobs=7, verbose=10)
+clf = GridSearchCV(LogisticRegression(), tuned_parameters, cv=cv, scoring='recall', n_jobs=aantal_processoren, verbose=10)
+tijdVorigePunt = geeftVoortgangsInformatie("Voor fit 3", startTijd, tijdVorigePunt)
 clf.fit(X_train_std, y_train)
 tijdVorigePunt = geeftVoortgangsInformatie("Na fit 3", startTijd, tijdVorigePunt)
 
-# plot_grid_search(clf, X_train, y_train, C)
-print(clf.best_estimator_)
-print(clf.best_params_)
+print("clf.best_estimator_", clf.best_estimator_)
+print("clf.best_params_", clf.best_params_)
 best_estimator = clf.best_estimator_
 calib = CalibratedClassifierCV(best_estimator, cv=cv, method='sigmoid')
+tijdVorigePunt = geeftVoortgangsInformatie("Voor fit 4", startTijd, tijdVorigePunt)
 calib.fit(X_train_std, y_train)
 tijdVorigePunt = geeftVoortgangsInformatie("Na fit 4", startTijd, tijdVorigePunt)
 
@@ -200,7 +203,7 @@ C = [math.pow(base,i) for i in range(-6,6)]
 
 tuned_parameters = [{'alpha': C}, {'penalty':['l1','l2']}, {'class_weight':[None,'balanced']}]
 C = [round(math.log(i,base)) for i in C]
-clf = GridSearchCV(SGDClassifier(loss="hinge",max_iter=1000, n_jobs=7),                    tuned_parameters, cv=cv, scoring='recall', n_jobs=7)
+clf = GridSearchCV(SGDClassifier(loss="hinge",max_iter=1000, n_jobs=aantal_processoren), tuned_parameters, cv=cv, scoring='recall', n_jobs=aantal_processoren)
 clf.fit(X_train_std, y_train)
 tijdVorigePunt = geeftVoortgangsInformatie("Na fit 5", startTijd, tijdVorigePunt)
 
@@ -231,8 +234,8 @@ tuned_parameters = {"max_depth": [2, 3, 5, 8, 10, 15, 20, 25, 30, 40, 50],
                 "max_features": ['auto', 'sqrt'],
                 "class_weight": ['balanced', 'balanced_subsample', None]
              }
-rf = RandomForestClassifier(random_state=42, n_jobs=7)
-clf = RandomizedSearchCV(rf, tuned_parameters, cv=cv, scoring='recall', n_jobs=7, verbose=10)
+rf = RandomForestClassifier(random_state=42, n_jobs=aantal_processoren)
+clf = RandomizedSearchCV(rf, tuned_parameters, cv=cv, scoring='recall', n_jobs=aantal_processoren, verbose=10)
 clf.fit(X_train, y_train)
 tijdVorigePunt = geeftVoortgangsInformatie("Na fit 7", startTijd, tijdVorigePunt)
 
@@ -258,8 +261,8 @@ tuned_parameters = {"n_estimators": [10, 20, 30, 40, 50],
                    "max_depth" : [2, 3, 5, 10, 15, 20, 25, 30],
                     'colsample_bytree':[0.1,0.3,0.5,1],
                    'subsample':[0.1,0.3,0.5,1]}
-xgbc = xgb.XGBClassifier(n_jobs = -1, random_state=42)
-clf = RandomizedSearchCV(xgbc, tuned_parameters, cv=cv, scoring='recall', n_jobs = 7, verbose=10)
+xgbc = xgb.XGBClassifier(n_jobs = aantal_processoren, random_state=42)
+clf = RandomizedSearchCV(xgbc, tuned_parameters, cv=cv, scoring='recall', n_jobs = aantal_processoren, verbose=10)
 clf.fit(X_train, y_train)
 tijdVorigePunt = geeftVoortgangsInformatie("Na fit 9", startTijd, tijdVorigePunt)
 
