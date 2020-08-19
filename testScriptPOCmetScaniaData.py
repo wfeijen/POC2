@@ -14,14 +14,14 @@ from sklearn.model_selection import train_test_split
 
 from sklearn.preprocessing import StandardScaler
 
-from sklearn.metrics import f1_score, auc, accuracy_score, recall_score, precision_score, precision_recall_curve,confusion_matrix, classification_report, roc_auc_score, roc_curve
+from sklearn.metrics import precision_recall_curve, confusion_matrix
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 import xgboost as xgb
-
+from prettytable import PrettyTable
 from sklearn.calibration import CalibratedClassifierCV
 
 # %% [markdown]
@@ -560,7 +560,7 @@ plot_confusion_matrix(y_train, y_train_pred, y_test, y_test_pred)
 # metric = pickle.load(open("metric1.pkl","rb"))
 
 # %%
-from prettytable import PrettyTable
+
     
 x = PrettyTable()
 
